@@ -1,5 +1,6 @@
 """Application entry point for the diagnostic report."""
 
+import argparse
 import os
 
 from app.network.network_info import get_network_info
@@ -119,49 +120,40 @@ def _print_connectivity_line(target: str, port: int, status: str) -> None:
     print(f"{target}:{port} -> {status} {_format_status_label(status)}")
 
 
-def main() -> None:
-    """Run the system, network, and port diagnostics summary."""
-    report_path = "data/output/diagnostic_report.json"
-    system_info = get_system_info()
-    network_info = get_network_info()
-    port_checks = run_port_checks()
-    cpu_status = _get_resource_status(system_info.cpu_usage)
-    memory_status = _get_resource_status(system_info.memory_percent)
-    disk_status = _get_resource_status(system_info.disk_percent)
-    dns_status = _get_check_status(network_info.dns_test.success)
-    connectivity_statuses = [
-        _get_check_status(test.success)
-        for test in network_info.connectivity_tests
-    ]
-    port_statuses = [
-        _get_check_status(check.success)
-        for check in port_checks
-    ]
-    external_port_checks = [
-        check for check in port_checks if check.target != "localhost"
-    ]
-    local_port_checks = [
-        check for check in port_checks if check.target == "localhost"
-    ]
-    overall_status = _get_overall_status(
-        cpu_status,
-        memory_status,
-        disk_status,
-        dns_status,
-        connectivity_statuses,
-        port_statuses,
+def _parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Run system diagnostics and optionally save a JSON report.",
     )
-    key_findings = _build_key_findings(
-        memory_status,
-        disk_status,
-        dns_status,
-        port_checks,
+    parser.add_argument(
+        "--output",
+        default="data/output/diagnostic_report.json",
+        help="Custom path for the JSON report output.",
     )
+    parser.add_argument(
+        "--summary-only",
+        action="store_true",
+        help="Print only hostname, overall status, key findings, and report path.",
+    )
+    parser.add_argument(
+        "--no-report",
+        action="store_true",
+        help="Skip JSON report generation.",
+    )
+    return parser.parse_args()
 
-    print(f"{settings.app_name} v{settings.version}")
-    print()
-    print(f"Hostname: {system_info.hostname}")
-    print()
+
+def _print_full_report(
+    system_info,
+    network_info,
+    external_port_checks: list,
+    local_port_checks: list,
+    cpu_status: str,
+    memory_status: str,
+    disk_status: str,
+    dns_status: str,
+) -> None:
+    """Print the full terminal diagnostics report."""
     print("## System Information")
     print()
     print(f"OS: {_format_os_line(system_info.os_name, system_info.os_version)}")
@@ -224,8 +216,21 @@ def main() -> None:
     for check in local_port_checks:
         status = _get_check_status(check.success)
         _print_connectivity_line(check.target, check.port, status)
-
     print()
+
+
+def _print_summary(
+    overall_status: str,
+    key_findings: list[str],
+    hostname: str | None = None,
+    report_path: str | None = None,
+    report_error: str | None = None,
+) -> None:
+    """Print the summary section and optional report result."""
+    if hostname:
+        print(f"Hostname: {hostname}")
+        print()
+
     print("## Summary")
     print()
     print(f"Overall Status: {overall_status}")
@@ -239,21 +244,98 @@ def main() -> None:
     else:
         print("* No issues detected")
 
-    saved_report_path = save_json_report(
-        output_path=report_path,
-        system_info=system_info,
-        network_info=network_info,
-        external_port_checks=external_port_checks,
-        local_port_checks=local_port_checks,
-        cpu_status=cpu_status,
-        memory_status=memory_status,
-        disk_status=disk_status,
+    if report_path:
+        print()
+        print(f"Report path: {report_path}")
+
+    if report_error:
+        print()
+        print(f"Report error: {report_error}")
+
+
+def main() -> None:
+    """Run the system, network, and port diagnostics summary."""
+    args = _parse_args()
+    system_info = get_system_info()
+    network_info = get_network_info()
+    port_checks = run_port_checks()
+    cpu_status = _get_resource_status(system_info.cpu_usage)
+    memory_status = _get_resource_status(system_info.memory_percent)
+    disk_status = _get_resource_status(system_info.disk_percent)
+    dns_status = _get_check_status(network_info.dns_test.success)
+    connectivity_statuses = [
+        _get_check_status(test.success)
+        for test in network_info.connectivity_tests
+    ]
+    port_statuses = [
+        _get_check_status(check.success)
+        for check in port_checks
+    ]
+    external_port_checks = [
+        check for check in port_checks if check.target != "localhost"
+    ]
+    local_port_checks = [
+        check for check in port_checks if check.target == "localhost"
+    ]
+    overall_status = _get_overall_status(
+        cpu_status,
+        memory_status,
+        disk_status,
+        dns_status,
+        connectivity_statuses,
+        port_statuses,
+    )
+    key_findings = _build_key_findings(
+        memory_status,
+        disk_status,
+        dns_status,
+        port_checks,
+    )
+    saved_report_path = None
+    report_error = None
+
+    if not args.no_report:
+        try:
+            saved_report_path = save_json_report(
+                output_path=args.output,
+                system_info=system_info,
+                network_info=network_info,
+                external_port_checks=external_port_checks,
+                local_port_checks=local_port_checks,
+                cpu_status=cpu_status,
+                memory_status=memory_status,
+                disk_status=disk_status,
+                overall_status=overall_status,
+                key_findings=key_findings,
+                get_status=_get_check_status,
+            )
+        except Exception as exc:
+            report_error = str(exc)
+
+    print(f"{settings.app_name} v{settings.version}")
+    print()
+
+    if not args.summary_only:
+        print(f"Hostname: {system_info.hostname}")
+        print()
+        _print_full_report(
+            system_info=system_info,
+            network_info=network_info,
+            external_port_checks=external_port_checks,
+            local_port_checks=local_port_checks,
+            cpu_status=cpu_status,
+            memory_status=memory_status,
+            disk_status=disk_status,
+            dns_status=dns_status,
+        )
+
+    _print_summary(
         overall_status=overall_status,
         key_findings=key_findings,
-        get_status=_get_check_status,
+        hostname=system_info.hostname if args.summary_only else None,
+        report_path=saved_report_path,
+        report_error=report_error,
     )
-    print()
-    print(f"Report path: {saved_report_path}")
 
 
 if __name__ == "__main__":
