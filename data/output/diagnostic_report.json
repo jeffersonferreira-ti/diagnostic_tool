@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-04-16T23:38:20.162986+00:00",
+  "hostname": "Lenovo_de_Jheef",
+  "system_information": {
+    "os_name": "Windows 11",
+    "os_version": "build 26200",
+    "architecture": "AMD64",
+    "processor": "Intel64 Family 6 Model 154 Stepping 4, GenuineIntel",
+    "cpu_usage": 4.8,
+    "cpu_status": "OK",
+    "total_memory": 7.73,
+    "used_memory": 6.45,
+    "memory_percent": 83.4,
+    "memory_status": "WARNING",
+    "total_disk": 474.72,
+    "free_disk": 69.77,
+    "disk_percent": 85.3,
+    "disk_status": "WARNING"
+  },
+  "network_diagnostics": {
+    "local_ip": "192.168.0.190",
+    "dns_test": {
+      "domain": "google.com",
+      "resolved_ip": "142.250.78.142",
+      "success": true,
+      "error_message": "",
+      "status": "OK"
+    },
+    "connectivity_tests": [
+      {
+        "target": "8.8.8.8",
+        "port": 53,
+        "success": true,
+        "error_message": "",
+        "status": "OK"
+      },
+      {
+        "target": "google.com",
+        "port": 443,
+        "success": true,
+        "error_message": "",
+        "status": "OK"
+      }
+    ]
+  },
+  "external_service_checks": [
+    {
+      "target": "google.com",
+      "port": 80,
+      "success": true,
+      "status": "OK",
+      "error_message": ""
+    },
+    {
+      "target": "google.com",
+      "port": 443,
+      "success": true,
+      "status": "OK",
+      "error_message": ""
+    }
+  ],
+  "local_service_checks": [
+    {
+      "target": "localhost",
+      "port": 3389,
+      "success": false,
+      "status": "FAILED",
+      "error_message": "[WinError 10061] Nenhuma conex\u00e3o p\u00f4de ser feita porque a m\u00e1quina de destino as recusou ativamente"
+    },
+    {
+      "target": "localhost",
+      "port": 22,
+      "success": false,
+      "status": "FAILED",
+      "error_message": "[WinError 10061] Nenhuma conex\u00e3o p\u00f4de ser feita porque a m\u00e1quina de destino as recusou ativamente"
+    }
+  ],
+  "summary": {
+    "overall_status": "WARNING",
+    "key_findings": [
+      "High memory usage",
+      "High disk usage",
+      "RDP port unavailable",
+      "SSH port unavailable"
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import os
 
 from app.network.network_info import get_network_info
 from app.ports.port_checker import run_port_checks
+from app.reporting.report_generator import save_json_report
 from app.system.system_info import get_system_info
 from config import settings
 
@@ -120,6 +121,7 @@ def _print_connectivity_line(target: str, port: int, status: str) -> None:
 
 def main() -> None:
     """Run the system, network, and port diagnostics summary."""
+    report_path = "data/output/diagnostic_report.json"
     system_info = get_system_info()
     network_info = get_network_info()
     port_checks = run_port_checks()
@@ -236,6 +238,22 @@ def main() -> None:
             print(f"* {finding}")
     else:
         print("* No issues detected")
+
+    saved_report_path = save_json_report(
+        output_path=report_path,
+        system_info=system_info,
+        network_info=network_info,
+        external_port_checks=external_port_checks,
+        local_port_checks=local_port_checks,
+        cpu_status=cpu_status,
+        memory_status=memory_status,
+        disk_status=disk_status,
+        overall_status=overall_status,
+        key_findings=key_findings,
+        get_status=_get_check_status,
+    )
+    print()
+    print(f"Report path: {saved_report_path}")
 
 
 if __name__ == "__main__":
