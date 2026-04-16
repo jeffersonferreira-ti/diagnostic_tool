@@ -1,6 +1,7 @@
 """Application entry point for the diagnostic report."""
 
 from app.network.network_info import get_network_info
+from app.ports.port_checker import run_port_checks
 from app.system.system_info import get_system_info
 from config import settings
 
@@ -27,9 +28,10 @@ def _format_os_line(name: str, version: str) -> str:
 
 
 def main() -> None:
-    """Run the system and network diagnostics summary."""
+    """Run the system, network, and port diagnostics summary."""
     system_info = get_system_info()
     network_info = get_network_info()
+    port_checks = run_port_checks()
     cpu_status = _get_resource_status(system_info.cpu_usage)
     memory_status = _get_resource_status(system_info.memory_percent)
     disk_status = _get_resource_status(system_info.disk_percent)
@@ -84,6 +86,16 @@ def main() -> None:
         message = f"Connectivity: {test.target}:{test.port} -> {status}"
         if not test.success and test.error_message:
             message = f"{message} ({test.error_message})"
+        print(f"{message} [{status}]")
+
+    print()
+    print("## Port Checks")
+    print()
+    for check in port_checks:
+        status = _get_check_status(check.success)
+        message = f"{check.target}:{check.port} -> {status}"
+        if not check.success and check.error_message:
+            message = f"{message} ({check.error_message})"
         print(f"{message} [{status}]")
 
 
