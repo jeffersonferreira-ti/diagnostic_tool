@@ -8,7 +8,7 @@
 
 # System Diagnostic Tool
 
-**Ferramenta de diagnóstico de sistema e rede para suporte técnico e infraestrutura**
+**Ferramenta de diagnostico de sistema e rede para suporte tecnico e infraestrutura**
 
 *Diagnose. Analyze. Act.*
 
@@ -16,96 +16,105 @@
 
 ---
 
-## 🧠 O Problema
+## O Problema
 
-No dia a dia de suporte técnico, problemas comuns incluem:
+No dia a dia de suporte tecnico, problemas comuns incluem:
 
 | Problema | Impacto |
 |---|---|
-| Máquina lenta | Queda de produtividade |
-| Falha de conexão | Interrupção de serviços |
-| Serviços inacessíveis | Usuários bloqueados |
-| Falta de diagnóstico claro | Tempo alto de resolução |
+| Maquina lenta | Queda de produtividade |
+| Falha de conexao | Interrupcao de servicos |
+| Servicos inacessiveis | Usuarios bloqueados |
+| Falta de diagnostico claro | Tempo alto de resolucao |
 
-Muitas vezes, o diagnóstico inicial é manual, repetitivo e sujeito a erro.
+Muitas vezes, o diagnostico inicial e manual, repetitivo e sujeito a erro.
 
 ---
 
-## 🚀 A Solução
+## A Solucao
 
 O **System Diagnostic Tool** automatiza a triagem inicial de problemas, coletando e analisando:
 
 - estado do sistema
 - conectividade de rede
-- disponibilidade de serviços (portas)
+- disponibilidade de servicos e portas
 - resumo de problemas detectados
 
-Tudo com saída clara e acionável.
+Tudo com saida clara e acionavel.
 
 ---
 
-## ⚙️ Como Funciona
+## Como Funciona
 
-
-Sistema → Coleta de dados → Análise → Classificação → Relatório → CLI
-
+```text
+Sistema -> Coleta de dados -> Analise -> Classificacao -> Relatorio -> CLI
+```
 
 Pipeline simples e focada em troubleshooting.
 
 ---
 
-## 🔍 Funcionalidades
+## Funcionalidades
 
-### 🖥️ System Diagnostics
+### System Diagnostics
 - CPU usage
 - Memory usage
 - Disk usage
 - Sistema operacional
 - Arquitetura e processador
 
-### 🌐 Network Diagnostics
+### Network Diagnostics
+- Hostname
 - IP local
 - Teste de DNS
 - Teste de conectividade externa
 
-### 🔌 Service Checks
+### Service Checks
 - HTTP (80)
 - HTTPS (443)
 - RDP (3389)
 - SSH (22)
 
-### 📊 Análise
-- Classificação por severidade:
-  - OK
-  - WARNING
-  - CRITICAL
-  - FAILED
+### Analise
+- Classificacao por severidade: `OK`, `WARNING`, `CRITICAL`, `FAILED`
+- Destaque automatico de achados relevantes
+- Status geral consolidado
 
-### 🧾 Output
-- Diagnóstico no terminal
+### Output
+- Diagnostico no terminal
 - Resumo com principais problemas
-- Relatório estruturado em JSON
+- Relatorio estruturado em JSON
 
 ---
 
-## 📈 Exemplo de Execução
+## Exemplo de Execucao
 
 ```bash
 python main.py
-Output
+```
+
+Exemplo de saida:
+
+```text
 System Diagnostic Tool v0.1.0
 
 Hostname: DESKTOP-01
 
 ## System Information
 
+OS: Windows 11
+Architecture: AMD64
+Processor: Intel64 Family
+
 CPU Usage: 14% [OK]
-Memory: 92% [CRITICAL]
-Disk: 85% [WARNING]
+Memory: 14.72GB / 16.00GB (92%) [CRITICAL]
+Disk: 120.00GB free / 800.00GB (85%) [WARNING]
 
 ## Network Diagnostics
 
-DNS Resolution: OK [OK]
+Local IP: 192.168.0.10
+DNS Resolution: OK (google.com -> 142.250.79.14) [OK]
+Connectivity: 8.8.8.8:53 -> OK [OK]
 Connectivity: google.com:443 -> OK [OK]
 
 ## External Service Checks
@@ -123,83 +132,155 @@ localhost:22 -> FAILED [FAILED]
 Overall Status: CRITICAL
 
 Key Findings:
-- High memory usage
-- High disk usage
-- RDP port unavailable
-- SSH port unavailable
-🧾 JSON Report
 
-O sistema gera automaticamente:
+* High memory usage
+* High disk usage
+* RDP port unavailable
+* SSH port unavailable
 
+Report path: data/output/diagnostic_report.json
+```
+
+---
+
+## JSON Report
+
+O sistema gera automaticamente um arquivo JSON em:
+
+```text
 data/output/diagnostic_report.json
+```
 
 Exemplo:
 
+```json
 {
   "hostname": "DESKTOP-01",
-  "overall_status": "WARNING",
-  "key_findings": [
-    "High disk usage",
-    "RDP port unavailable"
-  ]
+  "summary": {
+    "overall_status": "WARNING",
+    "key_findings": [
+      "High disk usage",
+      "RDP port unavailable"
+    ]
+  }
 }
-🖥️ Uso via CLI
-Execução padrão
+```
+
+---
+
+## Uso via CLI
+
+Execucao padrao:
+
+```bash
 python main.py
-Apenas resumo
+```
+
+Apenas resumo:
+
+```bash
 python main.py --summary-only
-Sem gerar relatório
+```
+
+Sem gerar relatorio:
+
+```bash
 python main.py --no-report
-Definir caminho do relatório
+```
+
+Definir caminho do relatorio:
+
+```bash
 python main.py --output ./reports/host01.json
-🧠 Diagnóstico Inteligente
+```
 
-A ferramenta interpreta dados e gera insights:
+---
 
-uso elevado de memória → possível lentidão
-disco cheio → risco de falhas
-DNS falhando → problema de resolução
-portas fechadas → serviço indisponível
-🏗️ Arquitetura
+## Diagnostico Inteligente
+
+A ferramenta interpreta os dados coletados e gera insights objetivos:
+
+- uso elevado de memoria -> possivel lentidao
+- disco com alta ocupacao -> risco de falhas e indisponibilidade
+- DNS falhando -> problema de resolucao
+- portas fechadas -> servico indisponivel
+
+---
+
+## Arquitetura
+
+```text
 diagnostic_tool/
-├── app/
-│   ├── system/
-│   ├── network/
-│   ├── ports/
-│   ├── reporting/
-│   └── models/
-├── data/
-│   └── output/
-├── main.py
-├── config.py
-└── requirements.txt
-⚠️ Limitações
-Não substitui ferramentas corporativas
-Não analisa logs ou processos avançados
-Não realiza varredura completa de portas
-Focado em triagem inicial
-🗺️ Roadmap
-Versão	Foco	Status
-v1.0	Diagnóstico completo (system + network + ports)	✅ Concluído
-v1.1	Refinamentos e melhorias de saída	✅ Concluído
-v1.2	Relatório JSON e CLI	✅ Concluído
-v2.0	Integração com logs	📋 Planejado
-v2.1	Suporte a monitoramento contínuo	💡 Futuro
-🎯 Objetivo do Projeto
+|-- app/
+|   |-- models/
+|   |-- network/
+|   |-- ports/
+|   |-- reporting/
+|   `-- system/
+|-- data/
+|   `-- output/
+|-- reports/
+|-- main.py
+|-- config.py
+`-- requirements.txt
+```
+
+---
+
+## Como Executar
+
+**Pre-requisitos:** Python `3.10+`
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python main.py
+```
+
+---
+
+## Limitacoes
+
+- Nao substitui ferramentas corporativas de observabilidade
+- Nao analisa logs ou processos avancados
+- Nao realiza varredura completa de portas
+- Focado em triagem inicial
+
+---
+
+## Roadmap
+
+| Versao | Foco | Status |
+|---|---|---|
+| v1.0 | Diagnostico completo (system + network + ports) | Concluido |
+| v1.1 | Refinamentos e melhorias de saida | Concluido |
+| v1.2 | Relatorio JSON e CLI | Concluido |
+| v2.0 | Integracao com logs | Planejado |
+| v2.1 | Suporte a monitoramento continuo | Futuro |
+
+---
+
+## Objetivo do Projeto
 
 Projeto desenvolvido para demonstrar:
 
-troubleshooting em ambientes reais
-diagnóstico de sistema e rede
-automação de tarefas de suporte
-boas práticas de arquitetura
+- troubleshooting em ambientes reais
+- diagnostico de sistema e rede
+- automacao de tarefas de suporte
+- boas praticas de arquitetura em Python
 
+---
 
-👨‍💻 Sobre o Desenvolvedor
+## Sobre o Desenvolvedor
 
-Desenvolvido por Jefferson Ferreira
+Desenvolvido por **Jefferson Ferreira**.
 
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/jefferson-ferreira-ti/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=flat&logo=github)](https://github.com/jluizferreira)
 
+---
 
-
-<div align="center"> <sub>System Diagnostic Tool · 2026</sub> </div>
+<div align="center">
+<sub>System Diagnostic Tool - 2026</sub>
+</div>
