@@ -16,7 +16,7 @@
 
 ---
 
-## O Problema
+🧠 O Problema
 
 No dia a dia de suporte tecnico, problemas comuns incluem:
 
@@ -31,7 +31,7 @@ Muitas vezes, o diagnostico inicial e manual, repetitivo e sujeito a erro.
 
 ---
 
-## A Solucao
+🚀 A Solucao
 
 O **System Diagnostic Tool** automatiza a triagem inicial de problemas, coletando e analisando:
 
@@ -44,7 +44,7 @@ Tudo com saida clara e acionavel.
 
 ---
 
-## Como Funciona
+⚙️ Como Funciona
 
 ```text
 Sistema -> Coleta de dados -> Analise -> Classificacao -> Relatorio -> CLI
@@ -54,40 +54,40 @@ Pipeline simples e focada em troubleshooting.
 
 ---
 
-## Funcionalidades
+🔍 Funcionalidades
 
-### System Diagnostics
+🖥️ System Diagnostics
 - CPU usage
 - Memory usage
 - Disk usage
 - Sistema operacional
 - Arquitetura e processador
 
-### Network Diagnostics
+🌐 Network Diagnostics
 - Hostname
 - IP local
 - Teste de DNS
 - Teste de conectividade externa
 
-### Service Checks
+🔌 Service Checks
 - HTTP (80)
 - HTTPS (443)
 - RDP (3389)
 - SSH (22)
 
-### Analise
+📊 Analise
 - Classificacao por severidade: `OK`, `WARNING`, `CRITICAL`, `FAILED`
 - Destaque automatico de achados relevantes
 - Status geral consolidado
 
-### Output
+🧾 Output
 - Diagnostico no terminal
 - Resumo com principais problemas
 - Relatorio estruturado em JSON
 
 ---
 
-## Exemplo de Execucao
+📈 Exemplo de Execucao
 
 ```bash
 python main.py
@@ -143,7 +143,7 @@ Report path: data/output/diagnostic_report.json
 
 ---
 
-## JSON Report
+🧾 JSON Report
 
 O sistema gera automaticamente um arquivo JSON em:
 
@@ -168,7 +168,7 @@ Exemplo:
 
 ---
 
-## Uso via CLI
+🖥️ Uso via CLI
 
 Execucao padrao:
 
@@ -196,7 +196,7 @@ python main.py --output ./reports/host01.json
 
 ---
 
-## Diagnostico Inteligente
+🧠 Diagnostico Inteligente
 
 A ferramenta interpreta os dados coletados e gera insights objetivos:
 
@@ -207,7 +207,7 @@ A ferramenta interpreta os dados coletados e gera insights objetivos:
 
 ---
 
-## Arquitetura
+🏗️ Arquitetura
 
 ```text
 diagnostic_tool/
@@ -240,7 +240,7 @@ python main.py
 
 ---
 
-## Limitacoes
+⚠️ Limitacoes
 
 - Nao substitui ferramentas corporativas de observabilidade
 - Nao analisa logs ou processos avancados
@@ -249,15 +249,15 @@ python main.py
 
 ---
 
-## Roadmap
+🗺️ Roadmap
 
 | Versao | Foco | Status |
 |---|---|---|
-| v1.0 | Diagnostico completo (system + network + ports) | Concluido |
-| v1.1 | Refinamentos e melhorias de saida | Concluido |
-| v1.2 | Relatorio JSON e CLI | Concluido |
-| v2.0 | Integracao com logs | Planejado |
-| v2.1 | Suporte a monitoramento continuo | Futuro |
+| v1.0 | Diagnostico completo (system + network + ports) | ✅ Concluido |
+| v1.1 | Refinamentos e melhorias de saida | ✅ Concluido |
+| v1.2 | Relatorio JSON e CLI | ✅ Concluido |
+| v2.0 | Integracao com logs | 📋 Planejado |
+| v2.1 | Suporte a monitoramento continuo | 💡 Futuro |
 
 ---
 
