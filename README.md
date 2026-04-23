@@ -272,7 +272,6 @@ Projeto desenvolvido para demonstrar:
 
 ---
 
-## Sobre o Desenvolvedor
 
 Desenvolvido por **Jefferson Ferreira**.
 
